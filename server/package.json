@@ -1,0 +1,19 @@
+{
+  "name": "fouro",
+  "version": "1.0.0",
+  "description": "User sourced grade application.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Marc Leef",
+  "license": "ISC",
+  "dependencies": {
+    "elasticsearch": "^6.1.0",
+    "express": "^4.13.3",
+    "jasmine": "^2.3.2",
+    "lodash": "^3.10.1",
+    "mysql": "^2.9.0"
+  }
+}
