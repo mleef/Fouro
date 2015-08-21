@@ -20,7 +20,7 @@ module.exports = function (app, db) {
   // Get all grades for course
   app.get("/:schoolName/classes/:classDepartment/:classNumber", function (req, res) {
     var school = req.params.schoolName;
-    var classDepartment = req.params.classDepartmnet;
+    var classDepartment = req.params.classDepartment;
     var classNumber = req.params.classNumber;
     res.send(school + '/' + classDepartment + '/' + classNumber);
   });

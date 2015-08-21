@@ -82,7 +82,7 @@ User.prototype.save = function(pool, callback) {
  * @param {Object} pool - mySQL connection pool to use for queries.
  * @return {Boolean} True if email could not be found in db, false otherwise.
 **/
-User.prototype.exists(pool) {
+User.prototype.exists = function(pool) {
   pool.query(CHECK_EMAIL_UNIQUENESS, this.data.email, function(err, rows) {
     if(err) {
       return true;

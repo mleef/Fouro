@@ -32,5 +32,16 @@ CREATE TABLE `classes` (
  `subject` varchar(255) DEFAULT NULL,
  `number` varchar(255) DEFAULT NULL,
  `name` varchar(255) NOT NULL,
+ `grades` bigint(20) NOT NULL,
+ PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8
+
+CREATE TABLE `auth` (
+ `id` bigint(20) NOT NULL AUTO_INCREMENT,
+ `user_id` bigint(20) NOT NULL,
+ `token` varchar(255) DEFAULT NULL,
+ `expires_at` DATETIME DEFAULT NULL,
+ `updated_at` TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+ `created_at` DATETIME DEFAULT NULL,
  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8
