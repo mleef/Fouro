@@ -4,7 +4,7 @@
 **/
 var Grade = require('../models/grade');
 
-module.exports = function (app, db) {
+module.exports = function (app, pool) {
     
     // For adding new grades.
     app.post("/grade", function (req, res) {

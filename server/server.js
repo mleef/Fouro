@@ -1,6 +1,6 @@
 var express = require('express');
 var app = express();
-var mySQL = require('./lib/db/mySQLWrapper');
+var mySQLWrapper = require('./lib/db/mySQLWrapper');
 var bodyParser = require('body-parser');
 var fs = require('fs');
 var port = process.env.PORT || 3000;
@@ -12,8 +12,11 @@ app.use(bodyParser.urlencoded({ extended: true }))
 // parse application/json
 app.use(bodyParser.json())
 
+// New mySQL connection pool
+var connectionPool = new mySQLWrapper();
+
 // Initialize routes with express and new sql wrapper
-var routes = require('./lib/routes/index.js')(app, new mySQL());
+var routes = require('./lib/routes/index.js')(app, connectionPool);
 
 
 var server = app.listen(port, function () {

@@ -18,12 +18,12 @@ User.prototype.sanitize = function(data) {
     return _.pick(_.defaults(data, schema), _.keys(schema)); 
 }
 
-User.prototype.save = function(callback) {
+User.prototype.save = function(pool, callback) {
 	// Check for unique email
-	if(!this.exists()) {
+	if(!this.exists(pool)) {
 		var school_id;
 		// Find school_id to add to user
-		connection.query('SELECT * FROM schools WHERE name = ?', this.data.school, function(err, rows) {
+		pool.query('SELECT * FROM schools WHERE name = ?', this.data.school, function(err, rows) {
 			if(err) {
 				callback(err, null);
 				return;
@@ -32,7 +32,7 @@ User.prototype.save = function(callback) {
 		});
 
 		// Save user
-		connection.query('INSERT INTO users (school_id, name, email, password) VALUES (?, ?, ?, ?)', [school_id, this.data.name, this.data.email, this.data.password], function(err, res) {
+		pool.query('INSERT INTO users (school_id, name, email, password) VALUES (?, ?, ?, ?)', [school_id, this.data.name, this.data.email, this.data.password], function(err, res) {
 			callback(err, res.insertId);
 		})
 	} else {
@@ -45,8 +45,8 @@ User.prototype.save = function(callback) {
 /**
  * Checks the uniqueness of user email.
 **/
-User.prototype.exists() {
-	connection.query('SELECT * FROM users WHERE email = ?', [this.data.email], function(err, rows) {
+User.prototype.exists(pool) {
+	pool.query('SELECT * FROM users WHERE email = ?', [this.data.email], function(err, rows) {
 		return rows.length === 0;
 	});
 }

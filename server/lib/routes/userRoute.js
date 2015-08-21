@@ -4,14 +4,12 @@
 **/
 var User = require('../models/user');
 
-module.exports = function (app, db) {
+module.exports = function (app, pool) {
 
-	// For registering a new user.
+    // For registering a new user.
     app.post("/user/register", function (req, res) {
         var newUser = new User(req.body);
-        console.log("/user/register")
-        console.log(req.body);
-        newUser.save(function(error, response) {
+        newUser.save(pool, function(error, response) {
             if(error) {
                 res.send(error);
             } else {
@@ -22,8 +20,6 @@ module.exports = function (app, db) {
 
     // For logging in an already existing user.
     app.post("/user/login", function (req, res) {
-        console.log("/user/login");
-        console.log(req.body);
         var newUser = new User(req.body);
         res.send(newUser);
     });
