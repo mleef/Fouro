@@ -9,11 +9,12 @@ module.exports = function() {
         
   // Connection pool to be used for queries
   var pool = mysql.createPool({
-    host     : 'aaf49ha3m9h772.cokfwtp02qun.us-east-1.rds.amazonaws.com',
+    host : 'aaf49ha3m9h772.cokfwtp02qun.us-east-1.rds.amazonaws.com',
+    connectionLimit : 100,
     database : 'fouro',
-    user     : 'mleef',
+    user : 'mleef',
     password : '7agentsmith!',
-    port      : '3306'
+    port : '3306'
   });
 
   return pool;
