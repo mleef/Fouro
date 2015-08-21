@@ -20,7 +20,7 @@ User.prototype.sanitize = function(data) {
 
 User.prototype.save = function(callback) {
 	// Check for unique email
-	if(!exists(this.data.email)) {
+	if(!this.exists()) {
 		var school_id;
 		// Find school_id to add to user
 		connection.query('SELECT * FROM schools WHERE name = ?', this.data.school, function(err, rows) {
@@ -45,8 +45,8 @@ User.prototype.save = function(callback) {
 /**
  * Checks the uniqueness of user email.
 **/
-function exists(email) {
-	connection.query('SELECT * FROM users WHERE email = ?', [email], function(err, rows) {
+User.prototype.exists() {
+	connection.query('SELECT * FROM users WHERE email = ?', [this.data.email], function(err, rows) {
 		return rows.length === 0;
 	});
 }
