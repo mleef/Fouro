@@ -9,7 +9,13 @@ module.exports = function (app, db) {
 	// For registering a new user.
     app.post("/user/register", function (req, res) {
         var newUser = new User(req.body);
-        res.send(newUser);
+        User.save(function(error, response) {
+            if(error) {
+                res.send(error);
+            } else {
+                res.send(response);
+            }
+        })
     });
 
     // For logging in an already existing user.
