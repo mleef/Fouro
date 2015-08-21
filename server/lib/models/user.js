@@ -35,6 +35,8 @@ User.prototype.save = function(callback) {
 		connection.query('INSERT INTO users (school_id, name, email, password) VALUES (?, ?, ?, ?)', [school_id, this.data.name, this.data.email, this.data.password], function(err, res) {
 			callback(err, res.insertId);
 		})
+	} else {
+		callback({error : "Email is already associated with an account."});
 	}
 
 	
@@ -43,7 +45,7 @@ User.prototype.save = function(callback) {
 /**
  * Checks the uniqueness of user email.
 **/
-function checkExistence(email) {
+function exists(email) {
 	connection.query('SELECT * FROM users WHERE email = ?', [email], function(err, rows) {
 		return rows.length === 0;
 	});

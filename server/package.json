@@ -10,6 +10,7 @@
   "author": "Marc Leef",
   "license": "ISC",
   "dependencies": {
+    "body-parser": "^1.13.3",
     "elasticsearch": "^6.1.0",
     "express": "^4.13.3",
     "jasmine": "^2.3.2",

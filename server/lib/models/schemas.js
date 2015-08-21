@@ -9,6 +9,8 @@ schemas = {
        },
     grade: {
     	grade : null,
+        courseSubject : null,
+        courseNumber : null,
     	school: null
     }
 }
