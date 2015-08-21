@@ -1,3 +1,8 @@
+/** server.js **/
+/*
+ * Main program execution.
+**/
+
 var express = require('express');
 var app = express();
 var mySQLWrapper = require('./lib/db/mySQLWrapper');
@@ -16,6 +21,7 @@ var connectionPool = new mySQLWrapper();
 // Initialize routes with express and new sql wrapper
 var routes = require('./lib/routes/index.js')(app, connectionPool);
 
+// Run server
 var server = app.listen(port, function () {
     console.log('Running on port ' + port);
 });

@@ -1,6 +1,6 @@
 /** mySQLWrapper.js **/
 /*
- * Grade routing.
+ * Creates a pool for sql connections to be drawn from.
 **/
 var mysql = require('mysql');
 
