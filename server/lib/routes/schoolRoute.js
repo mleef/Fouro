@@ -1,18 +1,28 @@
-/** grade.js **/
+/** schoolRoute.js **/
 /*
- * Grade routing.
+ * School routing.
 **/
-var Grade = require('../models/grade');
 
 module.exports = function (app, db) {
-    // set up the routes themselves
-    app.post("/grade", function (req, res) {
-        var newGrade = new Grade(req.body);
-        res.send(newGrade);
-    });
+  // Get all class departments
+  app.get("/:schoolName/classes", function (req, res) {
+    var school = req.params.schoolName;
+    res.send(school);
+  });
 
-    app.get("/grade", function (req, res) {
-        var newGrade = new Grade(req.body);
-        res.send(newGrade);
-    });
+  // Get all classes in given department
+  app.get("/:schoolName/classes/:classDepartment", function (req, res) {
+    var school = req.params.schoolName;
+    var classDepartment = req.params.classDepartment;
+    res.send(school + '/' + classDepartment);
+  });
+
+  // Get all grades for course
+  app.get("/:schoolName/classes/:classDepartment/:classNumber", function (req, res) {
+    var school = req.params.schoolName;
+    var classDepartment = req.params.classDepartmnet;
+    var classNumber = req.params.classNumber;
+    res.send(school + '/' + classDepartment + '/' + classNumber);
+  });
+
 };
