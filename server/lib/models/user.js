@@ -19,6 +19,7 @@ User.prototype.sanitize = function(data) {
 }
 
 User.prototype.save = function(pool, callback) {
+	var userData = this.data;
 	// Check for unique email
 	if(!this.exists(pool)) {
 		var school_id;
@@ -28,13 +29,14 @@ User.prototype.save = function(pool, callback) {
 				callback(err, null);
 				return;
 			}
-			school_id = rows[0].id;
+			userData.school_id = rows[0].id;
+
+			// Save user
+			pool.query('INSERT INTO users SET ?', userData, function(err, res) {
+				callback(err, res.insertId);
+			})
 		});
 
-		// Save user
-		pool.query('INSERT INTO users (school_id, name, email, password) VALUES (?, ?, ?, ?)', [school_id, this.data.name, this.data.email, this.data.password], function(err, res) {
-			callback(err, res.insertId);
-		})
 	} else {
 		callback({error : "Email is already associated with an account."});
 	}
@@ -46,7 +48,7 @@ User.prototype.save = function(pool, callback) {
  * Checks the uniqueness of user email.
 **/
 User.prototype.exists(pool) {
-	pool.query('SELECT * FROM users WHERE email = ?', [this.data.email], function(err, rows) {
+	pool.query('SELECT * FROM users WHERE email = ?', this.data.email, function(err, rows) {
 		return rows.length === 0;
 	});
 }

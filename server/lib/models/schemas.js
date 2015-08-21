@@ -5,7 +5,7 @@ schemas = {
         name: null,
         email: null,
         password: null,
-        school: null,
+	school_id: null
        },
     grade: {
     	grade : null,
