@@ -7,14 +7,14 @@ var mysql = require('mysql');
 
 module.exports = function() {
         
-	// Connection pool to be used for queries
-	var pool = mysql.createPool({
-		host     : 'aaf49ha3m9h772.cokfwtp02qun.us-east-1.rds.amazonaws.com',
+  // Connection pool to be used for queries
+  var pool = mysql.createPool({
+    host     : 'aaf49ha3m9h772.cokfwtp02qun.us-east-1.rds.amazonaws.com',
                 database : 'fouro',
-		user     : 'mleef',
-		password : '7agentsmith!',
-		port 	   : '3306'
-	});
+    user     : 'mleef',
+    password : '7agentsmith!',
+    port      : '3306'
+  });
 
-	return pool;
+  return pool;
 };

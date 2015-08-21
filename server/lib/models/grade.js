@@ -10,7 +10,7 @@ var _ = require("lodash");
  * @param {Object} data - Contains properties of new grade.
 **/
 var Grade = function (data) {  
-	this.data = this.sanitize(data);
+  this.data = this.sanitize(data);
 }
 
 // Initialize grade data to empty
@@ -22,9 +22,9 @@ Grade.prototype.data = {};
  * @return {Object} Sanitized data.
 **/
 Grade.prototype.sanitize = function(data) {  
-	data = data || {};
-	schema = schemas.grade;
-	return _.pick(_.defaults(data, schema), _.keys(schema)); 
+  data = data || {};
+  schema = schemas.grade;
+  return _.pick(_.defaults(data, schema), _.keys(schema)); 
 }
 
 module.exports = Grade;
