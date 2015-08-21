@@ -48,13 +48,17 @@ User.prototype.save = function(pool, callback) {
   if(!this.exists(pool)) {
     var school_id;
     // Find school_id to add to user
-    pool.query(GET_SCHOOL_ID, this.data.school, function(error, rows) {
+    pool.query(GET_SCHOOL_ID, userData.school, function(error, rows) {
       // Couldn't find school
       if(error || rows.length === 0) {
         callback(GET_SCHOOL_ID_ERROR, null);
         return;
       }
+      // Attach school_id to data
       userData.school_id = rows[0].id;
+
+      // Remove superfluous 'school' property
+      delete userData.school;
 
       // Save user
       pool.query(SAVE_USER, userData, function(error, res) {

@@ -1,18 +1,19 @@
 /** schemas.js **/
 
+// Client schemas for models.
 schemas = {  
-    user: {
-        name: null,
-        email: null,
-        password: null,
-	school_id: null
-       },
-    grade: {
-    	grade : null,
-        courseSubject : null,
-        courseNumber : null,
-    	school: null
-    }
+  user: {
+    name: null,
+    email: null,
+    password: null,
+    school: null
+  },
+  grade: {
+    grade : null,
+    courseSubject : null,
+    courseNumber : null,
+    school: null
+  }
 }
 
 module.exports = schemas;  
