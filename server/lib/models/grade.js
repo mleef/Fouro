@@ -11,10 +11,10 @@ var Grade = function (data) {
 
 Grade.prototype.data = {};
 
-User.prototype.sanitize = function(data) {  
+Grade.prototype.sanitize = function(data) {  
 	data = data || {};
     schema = schemas.grade;
     return _.pick(_.defaults(data, schema), _.keys(schema)); 
 }
 
-module.exports = User;
+module.exports = Grade;
