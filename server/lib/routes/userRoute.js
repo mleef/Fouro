@@ -8,8 +8,8 @@ module.exports = function (app, pool) {
 
     // For registering a new user.
     app.post("/users/create", function (req, res) {
-        var newUser = new User(req.body.data);
-        newUser.save(pool, function(error, response) {
+        var newUser = new User(req.body.fouroData);
+        newUser.create(pool, function(error, response) {
           res.json({error : error, response : response});
         })
     });
@@ -27,15 +27,19 @@ module.exports = function (app, pool) {
     });
 
     // For logging in an already existing user.
-    app.post("/users/login/:username", function (req, res) {
-        var username = req.params.username;
-        res.send(username);
+    app.post("/users/login", function (req, res) {
+        var newUser = new User(req.body.fouroData);
+        newUser.login(pool, function(error, response) {
+          res.json({error : error, response : response});
+        })
     });
 
-    // For authenticating a user
-    app.get("/users/auth/:username", function (req, res) {
-        var username = req.params.username;
-        res.send(username);
+    // For logging out a user.
+    app.post("/users/logout", function (req, res) {
+        var newUser = new User(req.body.fouroData);
+        newUser.logout(pool, function(error, response) {
+          res.json({error : error, response : response});
+        })
     });
 
 };

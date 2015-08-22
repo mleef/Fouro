@@ -3,8 +3,7 @@
 // Client schemas for models.
 schemas = {  
   user: {
-    name: null,
-    email: null,
+    username: null,
     password: null,
     school: null
   },

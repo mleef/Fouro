@@ -4,11 +4,14 @@
 **/
 var schemas = require("./schemas.js");  
 var _ = require("lodash");
+var randtoken = require('rand-token');
+var nodemailer = require('nodemailer');
 
 // Database queries
-var CHECK_EMAIL_UNIQUENESS = 'SELECT * FROM users WHERE email = ?';
+var CHECK_EMAIL_UNIQUENESS = 'SELECT * FROM users WHERE username = ?';
 var GET_SCHOOL_ID = 'SELECT * FROM schools WHERE name = ?';
 var SAVE_USER = 'INSERT INTO users SET ?';
+var LOGIN_USER = 'SELECT * FROM users WHERE username = ? AND password = ?';
 
 // Errors
 var EMAIL_UNIQUENESS_ERROR = "Email is already associated with an account.";
@@ -42,9 +45,9 @@ User.prototype.sanitize = function(data) {
  * @param {Object} pool - mySQL connection pool to use for queries.
  * @param {Function} callback - Function to callback with error/response.
 **/
-User.prototype.save = function(pool, callback) {
+User.prototype.create = function(pool, callback) {
   var userData = this.data;
-  // Check for unique email
+  // Check for unique username/email
   this.exists(pool, function(rows) {
   	if(rows && rows.length === 0) {
       var school_id;
@@ -68,7 +71,7 @@ User.prototype.save = function(pool, callback) {
             callback(SAVE_USER_ERROR, null);
             return;
           }
-          // Successful save, callback with insertion id.
+          // Successful create, callback with insertion id.
           callback(null, res.insertId);
           return;
         })
@@ -80,14 +83,23 @@ User.prototype.save = function(pool, callback) {
   }); 
 }
 
+User.prototype.login = function(pool, callback) {
+	var userData = this.data;
+
+}
+
+User.prototype.logout = function(pool, callback) {
+	
+}
+
 /**
- * Checks the uniqueness of user email.
+ * Checks the uniqueness of user username.
  * @param {Object} pool - mySQL connection pool to use for queries.
  * @param {Function} callback - callback function when done.
- * @return {Boolean} True if email could not be found in db, false otherwise.
+ * @return {Boolean} True if username could not be found in db, false otherwise.
 **/
 User.prototype.exists = function(pool, callback) {
-  pool.query(CHECK_EMAIL_UNIQUENESS, this.data.email, function(err, rows) {
+  pool.query(CHECK_EMAIL_UNIQUENESS, this.data.username, function(err, rows) {
     callback(rows);
   });
 }
