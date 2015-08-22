@@ -48,8 +48,8 @@ User.prototype.sanitize = function(data) {
 User.prototype.create = function(pool, callback) {
   var userData = this.data;
   // Check for unique username/email
-  this.exists(pool, function(rows) {
-  	if(rows && rows.length === 0) {
+  pool.query(CHECK_EMAIL_UNIQUENESS, this.data.username, function(err, rows) {
+    if(rows && rows.length === 0) {
       var school_id;
       // Find school_id to add to user
       pool.query(GET_SCHOOL_ID, userData.school, function(error, rows) {
@@ -83,25 +83,24 @@ User.prototype.create = function(pool, callback) {
   }); 
 }
 
+
+/**
+ * Logs user into the system by generating a new token.
+ * @param {Object} pool - mySQL connection pool to use for queries.
+ * @param {Function} callback - Function to callback with error/response.
+**/
 User.prototype.login = function(pool, callback) {
 	var userData = this.data;
 
 }
 
+/**
+ * Logs user out of the system by deleting their access token.
+ * @param {Object} pool - mySQL connection pool to use for queries.
+ * @param {Function} callback - Function to callback with error/response.
+**/
 User.prototype.logout = function(pool, callback) {
 	
-}
-
-/**
- * Checks the uniqueness of user username.
- * @param {Object} pool - mySQL connection pool to use for queries.
- * @param {Function} callback - callback function when done.
- * @return {Boolean} True if username could not be found in db, false otherwise.
-**/
-User.prototype.exists = function(pool, callback) {
-  pool.query(CHECK_EMAIL_UNIQUENESS, this.data.username, function(err, rows) {
-    callback(rows);
-  });
 }
 
 
