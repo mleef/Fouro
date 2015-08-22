@@ -14,7 +14,6 @@ module.exports = function() {
     database : 'fouro',
     user : 'mleef',
     password : '7agentsmith!',
-    port : '3306'
   });
 
   return pool;

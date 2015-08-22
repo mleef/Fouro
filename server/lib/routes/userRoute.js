@@ -8,13 +8,9 @@ module.exports = function (app, pool) {
 
     // For registering a new user.
     app.post("/users/create", function (req, res) {
-        var newUser = new User(req.body);
+        var newUser = new User(req.body.data);
         newUser.save(pool, function(error, response) {
-            if(error) {
-                res.send(error);
-            } else {
-                res.send(response);
-            }
+          res.json({error : error, response : response});
         })
     });
 

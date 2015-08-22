@@ -11,9 +11,9 @@ var GET_SCHOOL_ID = 'SELECT * FROM schools WHERE name = ?';
 var SAVE_USER = 'INSERT INTO users SET ?';
 
 // Errors
-var EMAIL_UNIQUENESS_ERROR = {error : "Email is already associated with an account."};
-var GET_SCHOOL_ID_ERROR = {error : "Could not find school."};
-var SAVE_USER_ERROR = {error : "Could not save user."};
+var EMAIL_UNIQUENESS_ERROR = "Email is already associated with an account.";
+var GET_SCHOOL_ID_ERROR = "Could not find school.";
+var SAVE_USER_ERROR = "Could not save user.";
 
 /**
  * Constructor for user model.
@@ -45,49 +45,50 @@ User.prototype.sanitize = function(data) {
 User.prototype.save = function(pool, callback) {
   var userData = this.data;
   // Check for unique email
-  if(!this.exists(pool)) {
-    var school_id;
-    // Find school_id to add to user
-    pool.query(GET_SCHOOL_ID, userData.school, function(error, rows) {
-      // Couldn't find school
-      if(error || rows.length === 0) {
-        callback(GET_SCHOOL_ID_ERROR, null);
-        return;
-      }
-      // Attach school_id to data
-      userData.school_id = rows[0].id;
-
-      // Remove superfluous 'school' property
-      delete userData.school;
-
-      // Save user
-      pool.query(SAVE_USER, userData, function(error, res) {
-        // Error saving user.
-        if(error || !res) {
-          callback(SAVE_USER_ERROR, null);
+  this.exists(pool, function(rows) {
+  	if(rows && rows.length === 0) {
+      var school_id;
+      // Find school_id to add to user
+      pool.query(GET_SCHOOL_ID, userData.school, function(error, rows) {
+        // Error or couldn't find school
+        if(error || rows.length === 0) {
+          callback(GET_SCHOOL_ID_ERROR, null);
           return;
         }
-        // Successful save, callback with insertion id.
-        callback(error, res.insertId);
-      })
-    });
+        // Attach school_id to data
+        userData.school_id = rows[0].id;
 
-  } else {
-    callback(EMAIL_UNIQUENESS_ERROR, null);
-  }
+        // Remove superfluous 'school' property
+        delete userData.school;
+
+        // Save user
+        pool.query(SAVE_USER, userData, function(error, res) {
+          // Error saving user.
+          if(error || !res) {
+            callback(SAVE_USER_ERROR, null);
+            return;
+          }
+          // Successful save, callback with insertion id.
+          callback(null, res.insertId);
+          return;
+        })
+      });
+    } else {
+    	callback(EMAIL_UNIQUENESS_ERROR, null);
+    	return;
+    }
+  }); 
 }
 
 /**
  * Checks the uniqueness of user email.
  * @param {Object} pool - mySQL connection pool to use for queries.
+ * @param {Function} callback - callback function when done.
  * @return {Boolean} True if email could not be found in db, false otherwise.
 **/
-User.prototype.exists = function(pool) {
+User.prototype.exists = function(pool, callback) {
   pool.query(CHECK_EMAIL_UNIQUENESS, this.data.email, function(err, rows) {
-    if(err) {
-      return true;
-    }
-    return rows.length === 0;
+    callback(rows);
   });
 }
 
