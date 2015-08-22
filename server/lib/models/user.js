@@ -12,11 +12,13 @@ var CHECK_EMAIL_UNIQUENESS = 'SELECT * FROM users WHERE username = ?';
 var GET_SCHOOL_ID = 'SELECT * FROM schools WHERE name = ?';
 var SAVE_USER = 'INSERT INTO users SET ?';
 var LOGIN_USER = 'SELECT * FROM users WHERE username = ? AND password = ?';
+var SAVE_TOKEN = 'INSERT INTO auth SET ?';
 
 // Errors
 var EMAIL_UNIQUENESS_ERROR = "Email is already associated with an account.";
 var GET_SCHOOL_ID_ERROR = "Could not find school.";
 var SAVE_USER_ERROR = "Could not save user.";
+var LOGIN_USER_ERROR = "Incorrect username/password";
 
 /**
  * Constructor for user model.
@@ -48,7 +50,7 @@ User.prototype.sanitize = function(data) {
 User.prototype.create = function(pool, callback) {
   var userData = this.data;
   // Check for unique username/email
-  pool.query(CHECK_EMAIL_UNIQUENESS, this.data.username, function(err, rows) {
+  pool.query(CHECK_EMAIL_UNIQUENESS, this.data.username, function(error, rows) {
     if(rows && rows.length === 0) {
       var school_id;
       // Find school_id to add to user
@@ -83,14 +85,35 @@ User.prototype.create = function(pool, callback) {
   }); 
 }
 
-
 /**
  * Logs user into the system by generating a new token.
  * @param {Object} pool - mySQL connection pool to use for queries.
  * @param {Function} callback - Function to callback with error/response.
 **/
 User.prototype.login = function(pool, callback) {
-	var userData = this.data;
+  var userData = this.data;
+  pool.query(LOGIN_USER, [userData.username, userData.password], function(error, rows) {
+  	// User's username and password matched
+  	if(rows && rows.length === 1) {
+  	  var tokenData = {};
+  	  // Get user id
+  	  tokenData.user_id = rows[0].user_id;
+      // Generate a 16 character alpha-numeric token:
+      tokenData.token = randtoken.generate(32);
+      // Set token date parameters
+      tokenData.updated_at = new Date();
+      tokenData.created_at = new Date();
+      tokenData.valid_until = new Date(new Date().setYear(new Date().getFullYear() + 1));
+
+      pool.query(SAVE_TOKEN, tokenData, function(error, rows) {
+        // do stuff with response
+      });
+
+  	} else {
+  		callback(LOGIN_USER_ERROR);
+  		return;
+  	}
+  });
 
 }
 
@@ -102,7 +125,5 @@ User.prototype.login = function(pool, callback) {
 User.prototype.logout = function(pool, callback) {
 	
 }
-
-
 
 module.exports = User;
