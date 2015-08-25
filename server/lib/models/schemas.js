@@ -12,6 +12,11 @@ schemas = {
     courseSubject : null,
     courseNumber : null,
     school: null
+  },
+  school : {
+    name : null,
+    city : null,
+    state : null
   }
 }
 
