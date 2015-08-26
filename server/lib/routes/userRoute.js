@@ -10,7 +10,7 @@ module.exports = function (app, pool) {
     app.post("/users/create", function (req, res) {
       var newUser = new User(req.body.fouroData, pool);
       newUser.create().then(function(result) {
-        res.json({result : result});
+        res.json({result : true});
       }, function(err) {
         res.json({error : err});
       });
@@ -20,11 +20,12 @@ module.exports = function (app, pool) {
     app.get("/users/confirm/:token", function (req, res) {
       var newUser = new User(null, pool);
       newUser.confirm(req.params.token).then(function(result) {
-        res.json({result : result});
+        res.json({result : true});
       }, function(err) {
         res.json({error : err});
       });
     });
+
     // For updating the info of an already existing user.
     app.put("/users/update/:username", function (req, res) {
         var username = req.params.username;
@@ -39,10 +40,12 @@ module.exports = function (app, pool) {
 
     // For logging in an already existing user.
     app.post("/users/login", function (req, res) {
-        var newUser = new User(req.body.fouroData, pool);
-        newUser.login(pool, function(error, response) {
-          res.json({error : error, response : response});
-        })
+      var newUser = new User(req.body.fouroData, pool);
+      newUser.login().then(function(result) {
+        res.json({result : true});
+      }, function(err) {
+        res.json({error : err});
+      });
     });
 
     // For logging out a user.

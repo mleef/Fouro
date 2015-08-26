@@ -14,6 +14,7 @@ var SAVE_USER = 'INSERT INTO users SET ?';
 var REGISTER_USER = 'INSERT INTO confirmation SET ?';
 var CONFIRM_USER = 'SELECT * FROM confirmation WHERE token = ?'
 var LOGIN_USER = 'SELECT * FROM users WHERE username = ? AND password = ?';
+var AUTHORIZE_USER = 'INSERT INTO auth SET ?';
 var SAVE_TOKEN = 'INSERT INTO auth SET ? ON DUPLICATE KEY UPDATE token=VALUES(token), valid_until=VALUES(valid_until)';
 
 // Errors
@@ -22,7 +23,8 @@ var SAVE_USER_ERROR = "Could not save user.";
 var REGISTER_USER_ERROR = "Could not register user."
 var CONFIRM_USER_ERROR = "Could not find registration token."
 var LOGIN_USER_ERROR = "Incorrect username/password";
-var EMAIL_ERROR = "Could not send email to specified address."
+var AUTHORIZE_USER_ERROR = "Could not authenticate user.";
+var EMAIL_ERROR = "Could not send email to specified address.";
 
 /**
  * Constructor for user model.
@@ -77,6 +79,41 @@ User.prototype.create = function() {
     }.bind(curUser), function(error) {
       reject(error);
     });
+  }.bind(curUser));
+}
+
+/**
+ * Logs user into the system by deleting their access token.
+**/
+User.prototype.login = function(callback) {
+  var curUser = this;
+  return new Promise(function(resolve, reject) {
+    this.pool.query(LOGIN_USER, [this.data.username, this.data.password], function(error, rows) {
+      if(!error && rows.length === 1) {
+      	// Generate new token and send back to user.
+      	var token = randtoken.generate(16);
+      	var curDate = new Date();
+      	var futureDate = new Date();
+      	// Expires in a year
+      	futureDate.setMonth(futureDate.getMonth() + 12);
+        var authData = {
+          user_id : rows[0].id,
+          token : token,
+          valid_until : futureDate.toISOString().slice(0, 19).replace('T', ' '),
+          updated_at : curDate.toISOString().slice(0, 19).replace('T', ' '),
+          created_at : curDate.toISOString().slice(0, 19).replace('T', ' ')
+        };
+        this.pool.query(AUTHORIZE_USER, authData, function(error, rows) {
+          if(error) {
+          	reject()
+          } else {
+          	resolve(token);
+          }
+        });
+      } else {
+      	reject(LOGIN_USER_ERROR);
+      }
+    }.bind(curUser))
   }.bind(curUser));
 }
 

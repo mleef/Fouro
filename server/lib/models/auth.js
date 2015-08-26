@@ -1,6 +1,6 @@
-/** grade.js **/
+/** auth.js **/
 /*
- * Grade model.
+ * Auth handler.
 **/
 var schemas = require("./schemas.js");  
 var _ = require("lodash");
@@ -9,7 +9,7 @@ var _ = require("lodash");
  * Constructor for grade model.
  * @param {Object} data - Contains properties of new grade.
 **/
-var Grade = function (data) {  
+var Auth = function (id) {  
   this.data = this.sanitize(data);
 }
 
